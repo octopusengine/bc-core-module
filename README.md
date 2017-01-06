@@ -5,6 +5,8 @@ BigClown Core Module Development Setup
 
 * Clean install of 64-bit (or 32-bit) Ubuntu 16.04 LTS
 
+NOTE: We know it works on macOS and Windows too but description is coming later...
+
 ## Steps to install the toolchain
 
 This section will guide you through GCC ARM Embedded toolchain installation on your host system.
@@ -13,11 +15,11 @@ This section will guide you through GCC ARM Embedded toolchain installation on y
 
 `sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa`
 
-#### Update package's information:
+#### Update the package lists:
 
 `sudo apt-get update`
 
-#### Download and install packages for pre-compiled toolchain:
+#### Download and install ARM GCC compiler package:
 
 `sudo apt-get install gcc-arm-embedded`
 
@@ -25,7 +27,7 @@ This section will guide you through GCC ARM Embedded toolchain installation on y
 
 `arm-none-eabi-gcc --version`
 
-You should get this output in the Terminal:
+You should get this output in Terminal:
 
 	arm-none-eabi-gcc (GNU Tools for ARM Embedded Processors) 6.2.1 20161205 (release) [ARM/embedded-6-branch revision 243739]
 	Copyright (C) 2016 Free Software Foundation, Inc.
