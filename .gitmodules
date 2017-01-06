@@ -1,0 +1,12 @@
+[submodule "bcl"]
+	path = bcl
+	url = https://github.com/bigclownlabs/bc-core-module-bcl.git
+[submodule "doc"]
+	path = doc
+	url = https://github.com/bigclownlabs/bc-core-module-doc.git
+[submodule "stm"]
+	path = stm
+	url = https://github.com/bigclownlabs/bc-core-module-stm.git
+[submodule "sys"]
+	path = sys
+	url = https://github.com/bigclownlabs/bc-core-module-sys.git
