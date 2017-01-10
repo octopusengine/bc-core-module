@@ -52,7 +52,7 @@ LD = sys/lkr/stm32l083cz.ld
 # Include directories                                                          #
 ################################################################################
 
-INC_DIR += app/inc
+INC_DIR += app
 INC_DIR += bcl/inc
 INC_DIR += bcl/stm/inc
 INC_DIR += stm/hal/inc
@@ -63,7 +63,7 @@ INC_DIR += sys/inc
 # Source directories                                                           #
 ################################################################################
 
-SRC_DIR += app/src
+SRC_DIR += app
 SRC_DIR += bcl/src
 SRC_DIR += bcl/stm/src
 SRC_DIR += stm/hal/src

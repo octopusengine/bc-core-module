@@ -19,7 +19,6 @@ struct
 } i2c_sensors;
 
 bc_led_t led;
-bc_led_t led2;
 
 void temperature_tag_event_handler(bc_temperature_tag_t *self, bc_temperature_tag_event_t event)
 {
@@ -59,7 +58,6 @@ void button_event_handler(bc_button_t *self, bc_button_event_t event)
         static uint16_t event_count = 0;
 
         bc_led_set_mode(&led, (event_count & 1) != 0 ? BC_LED_MODE_BLINK : BC_LED_MODE_OFF);
-        bc_led_set_mode(&led2, (event_count & 1) != 0 ? BC_LED_MODE_BLINK : BC_LED_MODE_OFF);
 
         usb_talk_publish_push_button("", &event_count);
 
@@ -72,11 +70,11 @@ void application_init(void)
     usb_talk_init();
 
     bc_led_init(&led, BC_GPIO_LED, false, false);
-    bc_led_init(&led2, BC_GPIO_P17, false, false);
+    bc_led_set_mode(&led, BC_LED_MODE_BLINK);
 
     static bc_button_t button;
 
-    bc_button_init(&button, BC_GPIO_P0, BC_GPIO_PULL_UP, true);
+    bc_button_init(&button, BC_GPIO_BUTTON, BC_GPIO_PULL_DOWN, false);
     bc_button_set_event_handler(&button, button_event_handler);
 
     bc_i2c_init(BC_I2C_I2C0, BC_I2C_SPEED_400_KHZ);
