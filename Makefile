@@ -80,6 +80,7 @@ OBJCOPY = $(TOOLCHAIN)objcopy
 SIZE = $(TOOLCHAIN)size
 OZONE = Ozone
 DFU_UTIL = dfu-util
+DOXYGEN = doxygen
 
 ################################################################################
 # Object files directory                                                       #
@@ -214,6 +215,15 @@ clean-out:
 dfu: $(BIN)
 	$(Q)$(ECHO) "Flashing $(BIN)..."
 	$(Q)$(DFU_UTIL) -d 0483:df11 -a 0 -s 0x08000000:leave -D $(BIN)
+
+################################################################################
+# Generate Doxygen documentation                                               #
+################################################################################
+
+.PHONY: doc
+doc:
+	$(Q)$(ECHO) "Generating documentation..."
+	$(Q)sh -c 'cd bcl && $(DOXYGEN) Doxyfile'
 
 ################################################################################
 # Debug firmware using Ozone debugger (from Segger)                            #
