@@ -17,7 +17,7 @@
 
 usb_talk_t usb_talk;
 
-static bc_tick_t _usb_talk_task(void *param);
+static bc_tick_t _usb_talk_task(void *param, bc_tick_t tick_now);
 static void usb_talk_process_character(char character);
 static void usb_talk_process_message(char *message, size_t length);
 static bool usb_talk_on_message_led_strip(const char *buffer, int token_count, jsmntok_t *tokens);
@@ -126,7 +126,7 @@ void usb_talk_publish_humidity_sensor(const char *prefix, float *relative_humidi
     usb_talk_send_string((const char *) usb_talk.tx_buffer);
 }
 
-static bc_tick_t _usb_talk_task(void *param)
+static bc_tick_t _usb_talk_task(void *param, bc_tick_t tick_now)
 {
     (void) param;
 
@@ -148,7 +148,7 @@ static bc_tick_t _usb_talk_task(void *param)
     }
 
     // TODO
-    return 0;
+    return tick_now;
 }
 
 static void usb_talk_process_character(char character)

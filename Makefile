@@ -56,6 +56,7 @@ INC_DIR += app
 INC_DIR += bcl/inc
 INC_DIR += bcl/stm/inc
 INC_DIR += stm/hal/inc
+INC_DIR += stm/spirit1/inc
 INC_DIR += stm/usb/inc
 INC_DIR += sys/inc
 
@@ -67,6 +68,7 @@ SRC_DIR += app
 SRC_DIR += bcl/src
 SRC_DIR += bcl/stm/src
 SRC_DIR += stm/hal/src
+SRC_DIR += stm/spirit1/src
 SRC_DIR += stm/usb/src
 SRC_DIR += sys/src
 

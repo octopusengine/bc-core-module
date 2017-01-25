@@ -8,6 +8,8 @@
 #include <bc_lux_meter_tag.h>
 #include <bc_barometer_tag.h>
 
+#include <bc_spirit1.h>
+
 struct
 {
     struct { bool valid; float value; } temperature;
@@ -19,6 +21,11 @@ struct
 } i2c_sensors;
 
 bc_led_t led;
+
+uint8_t rx_buffer[128];
+size_t rx_length;
+
+static void spirit1_event_handler(bc_spirit1_event_t event);
 
 void temperature_tag_event_handler(bc_temperature_tag_t *self, bc_temperature_tag_event_t event)
 {
@@ -55,6 +62,12 @@ void button_event_handler(bc_button_t *self, bc_button_event_t event)
 
     if (event == BC_BUTTON_EVENT_PRESS)
     {
+        static const uint8_t buf[4] = {1,2,3,4};
+
+        bc_led_pulse(&led, 100);
+
+        bc_spirit1_transmit(buf, sizeof(buf));
+        /*
         static uint16_t event_count = 0;
 
         bc_led_set_mode(&led, (event_count & 1) != 0 ? BC_LED_MODE_BLINK : BC_LED_MODE_OFF);
@@ -62,6 +75,7 @@ void button_event_handler(bc_button_t *self, bc_button_event_t event)
         usb_talk_publish_push_button("", &event_count);
 
         event_count++;
+        */
     }
 }
 
@@ -70,7 +84,7 @@ void application_init(void)
     usb_talk_init();
 
     bc_led_init(&led, BC_GPIO_LED, false, false);
-    bc_led_set_mode(&led, BC_LED_MODE_BLINK);
+    //bc_led_set_mode(&led, BC_LED_MODE_BLINK);
 
     static bc_button_t button;
 
@@ -102,4 +116,21 @@ void application_init(void)
     bc_barometer_tag_init(&barometer_tag, BC_I2C_I2C0);
     bc_barometer_tag_set_update_interval(&barometer_tag, 1000);
     bc_barometer_tag_set_event_handler(&barometer_tag, barometer_tag_event_handler);
+
+    bc_spirit1_init();
+    bc_spirit1_set_event_handler(spirit1_event_handler);
+    bc_spirit1_receive(rx_buffer, &rx_length, 1000);
+}
+
+static void spirit1_event_handler(bc_spirit1_event_t event)
+{
+    if (event == BC_SPIRIT1_EVENT_RECEPTION_DONE)
+    {
+        bc_led_pulse(&led, 100);
+    }
+
+    if (event == BC_SPIRIT1_EVENT_TRANSMISSION_DONE)
+    {
+        bc_spirit1_receive(rx_buffer, &rx_length, 1000);
+    }
 }
