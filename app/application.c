@@ -22,9 +22,6 @@ struct
 
 bc_led_t led;
 
-uint8_t rx_buffer[128];
-size_t rx_length;
-
 static void spirit1_event_handler(bc_spirit1_event_t event);
 
 void temperature_tag_event_handler(bc_temperature_tag_t *self, bc_temperature_tag_event_t event)
@@ -62,11 +59,11 @@ void button_event_handler(bc_button_t *self, bc_button_event_t event)
 
     if (event == BC_BUTTON_EVENT_PRESS)
     {
-        static const uint8_t buf[4] = {1,2,3,4};
-
         bc_led_pulse(&led, 100);
 
-        bc_spirit1_transmit(buf, sizeof(buf));
+        bc_spirit1_set_tx_length(16);
+        bc_spirit1_tx();
+
         /*
         static uint16_t event_count = 0;
 
@@ -119,18 +116,18 @@ void application_init(void)
 
     bc_spirit1_init();
     bc_spirit1_set_event_handler(spirit1_event_handler);
-    bc_spirit1_receive(rx_buffer, &rx_length, 1000);
+    bc_spirit1_rx();
 }
 
 static void spirit1_event_handler(bc_spirit1_event_t event)
 {
-    if (event == BC_SPIRIT1_EVENT_RECEPTION_DONE)
+    if (event == BC_SPIRIT1_EVENT_RX_DONE)
     {
         bc_led_pulse(&led, 100);
     }
 
-    if (event == BC_SPIRIT1_EVENT_TRANSMISSION_DONE)
+    if (event == BC_SPIRIT1_EVENT_TX_DONE)
     {
-        bc_spirit1_receive(rx_buffer, &rx_length, 1000);
+        bc_spirit1_rx();
     }
 }
