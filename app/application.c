@@ -15,6 +15,7 @@ struct
 {
     struct { bool valid; float value; } temperature;
     struct { bool valid; float value; } humidity;
+    struct { bool valid; float value; } humidity_r1;
     struct { bool valid; float value; } luminosity;
     struct { bool valid; float value; } altitude;
     struct { bool valid; float value; } pressure;
@@ -35,11 +36,20 @@ void temperature_tag_event_handler(bc_tag_temperature_t *self, bc_tag_temperatur
     i2c_sensors.temperature.valid = bc_tag_temperature_get_temperature_celsius(self, &i2c_sensors.temperature.value);
 }
 
-void humidity_tag_event_handler(bc_tag_humidity_t *self, bc_tag_humidity_event_t event)
+void humidity_tag_event_handler(bc_tag_humidity_t *self, bc_tag_humidity_event_t event, void *event_param)
 {
     (void) event;
+    (void) event_param;
 
     i2c_sensors.humidity.valid = bc_tag_humidity_get_humidity_percentage(self, &i2c_sensors.humidity.value);
+}
+
+void humidity_tag_event_handler_r1(bc_tag_humidity_t *self, bc_tag_humidity_event_t event, void *event_param)
+{
+    (void) event;
+    (void) event_param;
+
+    i2c_sensors.humidity_r1.valid = bc_tag_humidity_get_humidity_percentage(self, &i2c_sensors.humidity_r1.value);
 }
 
 void lux_meter_event_handler(bc_tag_lux_meter_t *self, bc_tag_lux_meter_event_t event)
@@ -104,6 +114,9 @@ void lis2dh12_event_handler(bc_lis2dh12_t *self, bc_lis2dh12_event_t event)
     }
 }
 
+bc_tag_humidity_t humidity_tag;
+bc_tag_humidity_t humidity_tag_r1;
+
 void application_init(void)
 {
     usb_talk_init();
@@ -124,11 +137,13 @@ void application_init(void)
     bc_tag_temperature_set_update_interval(&temperature_tag, 1000);
     bc_tag_temperature_set_event_handler(&temperature_tag, temperature_tag_event_handler);
 
-    static bc_tag_humidity_t humidity_tag;
-
-    bc_tag_humidity_init(&humidity_tag, BC_I2C_I2C0, BC_TAG_HUMIDITY_I2C_ADDRESS_DEFAULT);
+    bc_tag_humidity_init(&humidity_tag, BC_TAG_HUMIDITY_REVISION_R2, BC_I2C_I2C0, BC_TAG_HUMIDITY_I2C_ADDRESS_DEFAULT);
     bc_tag_humidity_set_update_interval(&humidity_tag, 1000);
-    bc_tag_humidity_set_event_handler(&humidity_tag, humidity_tag_event_handler);
+    bc_tag_humidity_set_event_handler(&humidity_tag, humidity_tag_event_handler, NULL);
+
+    bc_tag_humidity_init(&humidity_tag_r1, BC_TAG_HUMIDITY_REVISION_R1, BC_I2C_I2C0, BC_TAG_HUMIDITY_I2C_ADDRESS_DEFAULT);
+    bc_tag_humidity_set_update_interval(&humidity_tag_r1, 1000);
+    bc_tag_humidity_set_event_handler(&humidity_tag_r1, humidity_tag_event_handler_r1, NULL);
 
     static bc_tag_lux_meter_t lux_meter;
 
